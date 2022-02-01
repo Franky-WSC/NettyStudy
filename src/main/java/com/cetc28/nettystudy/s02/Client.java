@@ -16,7 +16,6 @@ import io.netty.util.ReferenceCountUtil;
  * @version: 1.0
  */
 public class Client {
-
     //client端保存一个channel用来发送消息
     private Channel channel = null;
 
