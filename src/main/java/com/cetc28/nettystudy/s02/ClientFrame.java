@@ -20,7 +20,7 @@ public class ClientFrame extends Frame {
     Client c = null;
 
     public ClientFrame() {
-        this.setSize(600,400);
+        this.setSize(1000,400);
         this.setLocation(100,20);
         this.add(ta, BorderLayout.CENTER);
         this.add(tf, BorderLayout.SOUTH);
