@@ -59,6 +59,10 @@ public class Client {
         channel.writeAndFlush(buf);
     }
 
+    public void closeConnect(){
+        this.send("_bye_");
+    }
+
     // 这是程序的main函数:入口函数
     public static void main(String[] args) {
         new Client().connect();

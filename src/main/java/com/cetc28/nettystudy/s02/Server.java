@@ -33,7 +33,7 @@ public class Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            System.out.println("ChannelInitializer: 执行的的SocketChannel: " + ch);
+                            System.out.println("ChannelInitializer时的SocketChannel: " + ch);
 
                             //给当前连接进的channel添加责任处理器
                             ChannelPipeline cp = ch.pipeline();
@@ -57,7 +57,7 @@ public class Server {
 class MyServerHandler extends ChannelInboundHandlerAdapter{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("ChannelPipeline中添加的channelActive的channel: " + ctx.channel());
+        System.out.println("channelActive时的ctx.channel(): " + ctx.channel());
         //将当前连接的channel添加到ChannelGroup中
         Server.clients.add(ctx.channel());
     }
@@ -68,8 +68,23 @@ class MyServerHandler extends ChannelInboundHandlerAdapter{
         //将客户端发来的消息在服务器中打印显示
         byte[] bytes = new byte[buf.readableBytes()];
         buf.getBytes(buf.readerIndex(),bytes);
-        System.out.println(new String(bytes));
-        //把该消息发送给当前连接上的所有客户端
-        Server.clients.writeAndFlush(buf);
+        String str = new String(bytes);//收到的消息转化成的字符串
+        System.out.println(str);
+        if ("_bye_".equals(str)){
+            System.out.println("客户端请求退出");
+            Server.clients.remove(ctx.channel());
+            ctx.close();
+        }else{
+            //把该消息发送给当前连接上的所有客户端
+            Server.clients.writeAndFlush(buf);
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        //删除出现异常的客户端channel,并关闭连接
+        Server.clients.remove(ctx.channel());
+        ctx.close();
     }
 }

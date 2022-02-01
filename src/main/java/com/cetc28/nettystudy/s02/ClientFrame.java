@@ -38,7 +38,8 @@ public class ClientFrame extends Frame {
         this.addWindowListener(new WindowAdapter() {
             @Override//点击关闭窗口按钮就执行这个函数
             public void windowClosing(WindowEvent e) {
-                System.exit(1);
+                c.closeConnect();//当我们点红叉关闭窗口时, 告诉服务器我们要退出了
+                System.exit(0);
             }
         });
 
